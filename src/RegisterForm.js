@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components/macro'
+import Tags from './Tags'
 
 export default function RegisterForm() {
 
@@ -8,13 +9,28 @@ export default function RegisterForm() {
         lastName: '',
         email: '',
         gender: 'female',
-        toc: 'false'
+        toc: 'false',
+        tags: []
     })
 
     function sendForm(event) {
         event.preventDefault()
         if(validateForm(userProfile)) {alert('Success')}
         console.log(userProfile)
+    }
+
+    function onAddTag(tag) {
+        setUserProfile({
+            ...userProfile,
+            tags: [...userProfile.tags, tag]
+        })
+    }
+
+    function onRemoveTag(tagIndex) {
+        setUserProfile({
+            ...userProfile,
+            tags: [...userProfile.tags.slice(0,tagIndex), ...userProfile.tags.slice(tagIndex+1)]
+        })
     }
 
     function handleChange(event) {
@@ -29,7 +45,6 @@ export default function RegisterForm() {
 
     return <FormWrapper onSubmit={sendForm}>
         <h1>Register</h1>
-        <form>
             <Fieldset onSubmit={sendForm}>
                 <div>
                     <label htmlFor="firstname"><strong>First</strong></label>
@@ -41,11 +56,13 @@ export default function RegisterForm() {
                 </div>
             </Fieldset>
 
-            <label>
-                <strong>Email</strong>
-                <input type="text" name="email" onChange={handleChange} value={userProfile.email}/>
-            </label>
-            
+            <div>
+                <label>
+                    <strong>Email</strong>
+                    <input type="text" name="email" onChange={handleChange} value={userProfile.email}/>
+                </label>
+            </div>
+
             <h4>Gender</h4>
 
             <Fieldset>
@@ -81,6 +98,8 @@ export default function RegisterForm() {
                 </label>
             </Fieldset>
 
+            <Tags onRemoveTag={onRemoveTag} onAddTag={onAddTag} tagList={userProfile.tags}/>
+
             <label>
                 <input type="checkbox" name="toc" onChange={handleChange}/>
                 I read the terms and conditions
@@ -89,10 +108,7 @@ export default function RegisterForm() {
             <div>
                 <Button>Register</Button>
             </div>
-            
-
-        </form>
-        
+                    
     </FormWrapper>
 }
 
@@ -112,7 +128,7 @@ const tocAccepted = ({toc}) => toc
 const validateForm = (userProfile) => validateName(userProfile) && validateEmail(userProfile) && tocAccepted(userProfile)
 
 
-const FormWrapper = styled.div`
+const FormWrapper = styled.form`
     display: grid;
     gap: 1.5rem;
     max-width: 380px;
