@@ -27,7 +27,7 @@ export default function Tags({tagList, onAddTag, onRemoveTag}) {
             onAddTag(currentTag)
             setCurrentTag('')
             event.preventDefault()
-        } else if (event.key === 'Backspace') {
+        } else if (event.key === 'Backspace' && currentTag === '') {
             onRemoveTag(tagList.length -1)
         }
     }
