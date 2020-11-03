@@ -7,13 +7,15 @@ export default function Tags({tagList, onAddTag, onRemoveTag}) {
 
     return <div>
         <h4>Personal Interests</h4>
-        <input type="text" value={currentTag} onChange={handleChange} onKeyDown={handleAddTag}/>
-        {tagList.map((tag,index)=> 
-            (<TagDiv key={index}>
-                {tag} 
-                <DeleteButton type="button" id={index} onClick={handleRemoveTag}>X</DeleteButton>
-            </TagDiv>)      
-        )}
+        <TagWrapper>
+            {tagList.map((tag,index)=> 
+                (<TagDiv key={index}>
+                    {tag} 
+                    <DeleteButton type="button" id={index} onClick={handleRemoveTag}>X</DeleteButton>
+                </TagDiv>)      
+            )}
+            <input type="text" value={currentTag} onChange={handleChange} onKeyDown={handleAddTag}/>
+        </TagWrapper>
     </div>
 
     function handleChange(event) {
@@ -25,6 +27,8 @@ export default function Tags({tagList, onAddTag, onRemoveTag}) {
             onAddTag(currentTag)
             setCurrentTag('')
             event.preventDefault()
+        } else if (event.key === 'Backspace') {
+            onRemoveTag(tagList.length -1)
         }
     }
     
@@ -39,7 +43,6 @@ const TagDiv = styled.div`
     border-radius: .3em;
     display: inline-block;
     margin-right: 1rem;
-    margin-top: 1rem;
     padding: 1rem;
 `
 
@@ -49,4 +52,23 @@ const DeleteButton = styled.button`
     display: inline-block;
     padding-left: .5rem;
     font-size: 1rem;
+`
+
+const TagWrapper = styled.div`
+    display: flex;
+    border: 1px solid gray;
+    width: 380px;
+    padding: .5rem .5rem;
+    flex-flow: row wrap;
+
+    input {
+        border: none;
+        height: 3rem;
+        font-size: 1.5rem;
+        width: 100px;
+
+        &:focus {
+            outline: none;
+        }
+    }
 `
